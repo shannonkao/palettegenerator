@@ -1,0 +1,1 @@
+# Limited Palette Generator
