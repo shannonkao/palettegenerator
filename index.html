@@ -16,65 +16,94 @@
         height: 30px;
         width: 30px;
     } 
+    
+    #step {
+        width: 50px;
+    }
     </style>
 
     <script type="text/javascript">
+         var step = 5;          // number of steps in gradient
+         var num_colors = 3;    // number of colors
+         
          $(document).ready(function() {
+            var const_colors = ['#fff', '#000'];
             
             $("#mix").click(function() {
-                var c0 = $('#c0').val();
-                var c1 = $('#c1').val();
-                var c2 = $('#c2').val();
-                var colors = ['#fff', '#000', c0, c1, c2];
+                step = Number($('#step').val());
+                if (isNaN(step) || step < 3 || step > 10) step = 5;
+                make_tables();
                 
+                var colors = [];
+                
+                // read in colors
+                for (var i=0; i<num_colors; i++) {
+                    colors.push($('#c'+i).val());
+                }
+                
+                // generate gradient of most saturated colors
                 var grad = [];
-                
-                for (var i=0; i<3; i++) {
-                    var t_id = "t"+i;
-                    var table = document.getElementById(t_id);
-                    for(var x=0; x<table.rows.length; x++){
-                      var row = table.rows[x];
-                      
-                      for(var y=0; y<row.cells.length; y+=1){
-                        var cell = row.cells[y];
-                        
-                        var c = x;
-                        if (x >= i+2) c = x+1;
-                        var color = $.xcolor.gradientlevel($('#c'+i).val(), colors[c], y, 4);
-                        if (i==0 && x==2) {grad.push(color.getHex())}
-                        if (i<2 && x==3) {grad.push(color.getHex())}
-                        cell.style.backgroundColor = color.getHex();
-                      }
+                for (var i=0; i<num_colors; i++) {
+                    for (var j=0; j<num_colors; j++) {
+                        if (j < i) {
+                            for(var y=0; y<step; y++){
+                                var color = $.xcolor.gradientlevel(colors[i], colors[j], y, step-1);
+                                grad.push(color.getHex());
+                            }
+                        }
                     }
                 }
                 
-                
-                for (var i=3; i<6; i++) {
+                // generate mixes
+                for (var i=0; i<num_colors; i++) {
                     var t_id = "t"+i;
                     var table = document.getElementById(t_id);
                     for (var j=0; j<2; j++) {
                         for(var x=0; x<Math.ceil(table.rows.length/2); x++){
                           var row = table.rows[x + j*Math.ceil(table.rows.length/2)];
                           if (row) {
-                              for(var y=0; y<row.cells.length; y++){
+                              for(var y=0; y<step; y++){
                                 var cell = row.cells[y];
                                 
-                                var a = colors[j];
-                                var b = grad[y + 5*(i-3)];
+                                var a = const_colors[j];
+                                var b = grad[y + step*i];
                                 if (j==1) {
-                                    a = grad[y + 5*(i-3)];
-                                    b = colors[j];
+                                    a = grad[y + step*i];
+                                    b = const_colors[j];
                                 }
                                 
-                                var color = $.xcolor.gradientlevel(a, b, (x+1), 5);
+                                var color = $.xcolor.gradientlevel(a, b, (x+1), step);
                                 cell.style.backgroundColor = color.getHex();
+                                cell.style.border = "1px solid white";
                               }
                           }
                         }
                     }
                 }
             });
+            
+            make_tables();
         });
+        
+        function make_tables() {
+            document.getElementById('tables').innerHTML = '';
+            
+            // populate tables
+            for (var i=0; i<num_colors; i++) {
+                var table = document.createElement('table');
+                table.id = 't'+i;
+                
+                for (var r=0; r<step+step-1; r++) {
+                    var row = document.createElement('tr');
+                    for (var c=0; c<step; c++) {
+                        var cell = document.createElement('td');
+                        row.appendChild(cell);
+                    }
+                    table.appendChild(row);
+                }
+                document.getElementById('tables').appendChild(table);
+            }
+        }
     </script>
 </head>
 
@@ -82,61 +111,9 @@
     <input class="jscolor" value="336600" id="c0">
     <input class="jscolor" value="003366" id="c1">
     <input class="jscolor" value="660000" id="c2">
+    Step: <input id="step" placeholder=" 3 - 10">
     <button id="mix">Mix</button>
     <p>
-    
-    <table id="t0">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <table id="t1">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-     <table id="t2">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <br>
-   
-    <table id="t3">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <table id="t4">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <table id="t5">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <br>
+    <div id="tables"></div>
+
 </body>
