@@ -48,17 +48,27 @@
                     }
                 }
                 
-                for (var j=0; j<2; j++) {
-                    for (var i=3; i<6; i++) {
-                        var t_id = "t"+(i + 3*j);
-                        var table = document.getElementById(t_id);
-                        for(var x=0; x<table.rows.length; x++){
-                          var row = table.rows[x];
-                          for(var y=0; y<row.cells.length; y+=1){
-                            var cell = row.cells[y];
-
-                            var color = $.xcolor.gradientlevel(colors[j], grad[x + 1 + 5*(i-3)], y, 4);
-                            cell.style.backgroundColor = color.getHex();
+                
+                for (var i=3; i<6; i++) {
+                    var t_id = "t"+i;
+                    var table = document.getElementById(t_id);
+                    for (var j=0; j<2; j++) {
+                        for(var x=0; x<Math.ceil(table.rows.length/2); x++){
+                          var row = table.rows[x + j*Math.ceil(table.rows.length/2)];
+                          if (row) {
+                              for(var y=0; y<row.cells.length; y++){
+                                var cell = row.cells[y];
+                                
+                                var a = colors[j];
+                                var b = grad[y + 5*(i-3)];
+                                if (j==1) {
+                                    a = grad[y + 5*(i-3)];
+                                    b = colors[j];
+                                }
+                                
+                                var color = $.xcolor.gradientlevel(a, b, (x+1), 5);
+                                cell.style.backgroundColor = color.getHex();
+                              }
                           }
                         }
                     }
@@ -100,8 +110,18 @@
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
     </table>
     <table id="t4">
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
@@ -112,25 +132,11 @@
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
         <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td></tr>
     </table>
     <br>
-    
-    <table id="t6">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <table id="t7">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-    <table id="t8">
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-        <tr><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
 </body>
